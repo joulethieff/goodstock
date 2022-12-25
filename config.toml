@@ -1,0 +1,4 @@
+# config.toml ÆÄÀÏ
+[theme]
+primaryColor="green" 			# theme
+secondaryBackgroundColor="red" 		# side bar
