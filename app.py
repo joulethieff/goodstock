@@ -1,17 +1,37 @@
-import yfinance as yf
+# Your df that contains "Time" column
 import streamlit as st
+import pandas as pd
 import datetime
 
-st.title("""간단한 주식차트 보기(테슬라)""")
+df = pd.DataFrame({"Time":[1, 2, 3, 4]})
 
-Stock_Symbol = 'TSLA'
-StockData = yf.Ticker(Stock_Symbol)
-StockChart = StockData.history(period = '1d', start='2019-7-1',end='2021-12-25')
 
-st.line_chart(StockChart.Close)
-st.line_chart(StockChart.Volume)
+st.header('문수보리 택일')
 
-## Date Input
+start_date = st.date_input('Enter start date', value=datetime.datetime(2019,7,6))
 
-today = st.date_input("날짜를 선택하세요.", datetime.datetime.now())
-the_time = st.time_input("시간을 입력하세요.", datetime.time())
+#start_time = st.time_input('Enter start time', datetime.time(8, 45))
+
+start = "00:00"
+end = "23:59"
+times = []
+start = now = datetime.datetime.strptime(start, "%H:%M")
+end = datetime.datetime.strptime(end, "%H:%M")
+
+while now != end:
+    times.append(str(now.strftime("%H:%M")))
+    now += datetime.timedelta(minutes=1)
+
+times.append(end.strftime("%H:%M"))
+
+
+st.multiselect('Departure hour:',times)
+
+
+# start_datetime = datetime.datetime.combine(start_date, start_time)
+# df["DateTime"] = [start_datetime + datetime.timedelta(seconds=time) for time in df["Time"]]
+# df["DateTime"] = [date.strftime("%d/%m/%Y %H:%M:%S") for date in df["DateTime"]]
+
+
+#df = df.drop(columns=["Time"])
+#st.dataframe(df)
