@@ -12,29 +12,10 @@ st.header('문수보리 택일')
 #start_time = st.time_input('Enter start time', datetime.time(8, 45))
 
 st.text_input('날짜를 입력하세요', '2023/01/01')
-st.text_input('시간을 입력하세요', '2023/01/01')
-
-"""
-start = "00:00"
-end = "23:59"
-times = []
-start = now = datetime.datetime.strptime(start, "%H:%M")
-end = datetime.datetime.strptime(end, "%H:%M")
-
-while now != end:
-    times.append(str(now.strftime("%H:%M")))
-    now += datetime.timedelta(minutes=1)
-
-times.append(end.strftime("%H:%M"))
-"""
+st.text_input('시간을 입력하세요', '23:23')
 
 
 
 
-# start_datetime = datetime.datetime.combine(start_date, start_time)
-# df["DateTime"] = [start_datetime + datetime.timedelta(seconds=time) for time in df["Time"]]
-# df["DateTime"] = [date.strftime("%d/%m/%Y %H:%M:%S") for date in df["DateTime"]]
 
 
-#df = df.drop(columns=["Time"])
-#st.dataframe(df)
