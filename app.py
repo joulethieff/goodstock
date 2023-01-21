@@ -20,7 +20,7 @@ geolocator = Nominatim(user_agent="geoapiExercises")
 obj_tzf = TimezoneFinder()
 
 ### 스트림릿에서 날짜값들을 입력
-col1,col2 = st.columns([2,10])                                               # 년 월 일로 나눔
+col1,col2 = st.columns([4,10])                                               # 년 월 일로 나눔
 
 
 ##### 기본 정보 입력 ##
