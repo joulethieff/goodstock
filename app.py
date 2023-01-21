@@ -24,14 +24,16 @@ col1,col2 = st.columns([2,10])                                               # �
 
 
 ##### 기본 정보 입력 ##
-name = st.text_input('이름', '홍길동')  # 이름을 입력
-byear = st.number_input('생년', min_value=0, max_value=3000, value=1980, step=1)  # 생년을 입력
-bmonth = st.number_input('생월', min_value=1, max_value=12, value=1, step=1)  # 생월을 입력
-bday = st.number_input('생일', min_value=1, max_value=31, value=1, step=1)  # 생월을 입력
-bhour = st.number_input('시', min_value=0, max_value=23, value=0, step=1)  # 시를 입력
-bmin = st.number_input('분', min_value=0, max_value=60, value=0, step=1)  # 분을 입력
-bsec = st.number_input('초', min_value=0, max_value=60, value=0, step=1)  # 초를 입력
-lad = st.text_input('태어난곳', '서울시')  # 위치명 입력
+with col1:
+    name = st.text_input('이름', '홍길동')  # 이름을 입력
+    byear = st.number_input('생년', min_value=0, max_value=3000, value=1980, step=1)  # 생년을 입력
+    bmonth = st.number_input('생월', min_value=1, max_value=12, value=1, step=1)  # 생월을 입력
+    bday = st.number_input('생일', min_value=1, max_value=31, value=1, step=1)  # 생월을 입력
+    bhour = st.number_input('시', min_value=0, max_value=23, value=0, step=1)  # 시를 입력
+    bmin = st.number_input('분', min_value=0, max_value=60, value=0, step=1)  # 분을 입력
+    bsec = st.number_input('초', min_value=0, max_value=60, value=0, step=1)  # 초를 입력
+    lad = st.text_input('태어난곳', '서울시')  # 위치명 입력
+
 location = geolocator.geocode(lad)                                      # 위치에서 위경도 값을 가져옴
 ### 위치에서 문자열 타임존 가져오기
 obj_tzf_result = obj_tzf.timezone_at(lng=location.longitude, lat=location.latitude) # 타임존 스트링으로 가져오기
@@ -47,5 +49,7 @@ date = Datetime(str(dt.year)+'/'+str(dt.month)+'/'+str(dt.day), str(dt.hour)+':'
 pos = GeoPos(location.latitude, location.longitude)   # 위경도 값 입력
 chart = Chart(date, pos, hsys=const.HOUSES_KOCH,IDs=const.LIST_OBJECTS)
 
-sun = chart.getObject(const.SUN)
-st.text(sun)
+#### 데이타 출력 ##
+with col2:
+    sun = chart.getObject(const.SUN)
+    st.text(sun)
