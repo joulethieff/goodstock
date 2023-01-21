@@ -2,7 +2,7 @@ pandas
 yfinance
 streamlit
 flatlib
-geopy.geocoders
+geopy
 pytz
 datetime
 timezonefinder
