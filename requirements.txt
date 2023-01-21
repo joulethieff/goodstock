@@ -1,3 +1,8 @@
+pandas
 yfinance
 streamlit
 flatlib
+geopy.geocoders
+pytz
+datetime
+timezonefinder
