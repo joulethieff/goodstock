@@ -12,6 +12,7 @@ import pytz
 import datetime
 import streamlit as st                              # 스트림릿 임포트
 
+import swisseph as swe
 swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resources/swefiles')
 
 # initialize Nominatim API, 지명과 관련된 api
