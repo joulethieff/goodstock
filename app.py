@@ -17,6 +17,8 @@ import streamlit as st                              # 스트림릿 임포트
 geolocator = Nominatim(user_agent="geoapiExercises")
 obj_tzf = TimezoneFinder()
 
+### 위치에서 문자열 타임존 가져오기
+obj_tzf_result = obj_tzf.timezone_at(lng=location.longitude, lat=location.latitude) # 타임존 스트링으로 가져오기
 
 ### 스트림릿에서 날짜값들을 입력
 col1,col2 = st.columns([2,10])                                               # 년 월 일로 나눔
