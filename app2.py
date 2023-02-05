@@ -1,15 +1,19 @@
-import streamlit as st
+from datetime import datetime
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 
-col1, col2, col3 = st.columns(3)
+now = datetime.now()
+today = date.today()
 
-with col1:
-   st.header("A cat")
-   st.image("https://static.streamlit.io/examples/cat.jpg")
+# 현재시간 출력
+print("현재 :" , now)	# 현재 : 2021-01-09 20:07:09.682594
 
-with col2:
-   st.header("A dog")
-   st.image("https://static.streamlit.io/examples/dog.jpg")
+#해당 달의 첫째날 구하기
+first_day = today.replace(day=1)
+last_day = first_day + relativedelta(months=1) - relativedelta(days=1)
 
-with col3:
-   st.header("An owl")
-   st.image("https://static.streamlit.io/examples/owl.jpg")
+print("금월 1일 : ", first_day)
+print("금월 말일 : ", last_day)
+
+
+

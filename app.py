@@ -1,6 +1,5 @@
-import streamlit as st                              # 스트림릿 임포트
-from flatlib.datetime import Datetime
 import pandas as pd
+import base64
 from flatlib.datetime import Datetime               # 날짜 시간
 from flatlib.geopos import GeoPos                   # 위치
 from flatlib import const                           # 차트에서 포인트값
@@ -11,47 +10,88 @@ from timezonefinder import TimezoneFinder
 import pytz
 import datetime
 import streamlit as st                              # 스트림릿 임포트
+import streamlit.components.v1 as components        # 스트림릿 컴포넌트
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 import swisseph as swe
-swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resources/swefiles')
+#swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resources/swefiles')
+# PC에서 라이브러리
+swe.set_ephe_path('c:/venv/helloword/venv/lib/site-packages/flatlib/resources/swefiles')
+
+# 웹 화면을 전체적으로 크게 
+st.set_page_config(layout="wide")
 
 # initialize Nominatim API, 지명과 관련된 api
 geolocator = Nominatim(user_agent="geoapiExercises")
 obj_tzf = TimezoneFinder()
 
+
+# 화면을 구분
+tab1, tab2, tab3, tab4 = st.tabs(["심운", "택일", "궁합","만세력"])
+
 ### 스트림릿에서 날짜값들을 입력
-col1,col2 = st.columns([5,5])                                               # 년 월 일로 나눔
+col1,col2,col3 = st.columns([1,1,8])                                               # 년 월 일로 나눔
 
 
 ##### 기본 정보 입력 ##
-with col1:
-    name = st.text_input('이름', '홍길동')  # 이름을 입력
-    byear = st.number_input('생년', min_value=0, max_value=3000, value=1980, step=1)  # 생년을 입력
-    bmonth = st.number_input('생월', min_value=1, max_value=12, value=1, step=1)  # 생월을 입력
-    bday = st.number_input('생일', min_value=1, max_value=31, value=1, step=1)  # 생월을 입력
+## 심운에서 보여주고 싶은 부분
+with tab1:
 
-with col2:
-    bhour = st.number_input('시', min_value=0, max_value=23, value=0, step=1)  # 시를 입력
-    bmin = st.number_input('분', min_value=0, max_value=60, value=0, step=1)  # 분을 입력
-    bsec = st.number_input('초', min_value=0, max_value=60, value=0, step=1)  # 초를 입력
-    lad = st.text_input('태어난곳', '서울시')  # 위치명 입력
+    with col1:
+        name = st.text_input('이름', '홍길동')  # 이름을 입력
+        gender = st.selectbox('성별', ('남', '여'))  # 이름을 입력
+        lad = st.text_input('태어난곳', '서울시')  # 위치명 입력
 
-location = geolocator.geocode(lad)                                      # 위치에서 위경도 값을 가져옴
-### 위치에서 문자열 타임존 가져오기
-obj_tzf_result = obj_tzf.timezone_at(lng=location.longitude, lat=location.latitude) # 타임존 스트링으로 가져오기
+    with col2:
+        bdate = st.date_input("생일", min_value=datetime.date(1900, 1, 1))
+        #btime = st.time_input("생시")
+        hours = []
+        mins = []
+        for h in range(0, 24):
+            hours.append(h)
+        bhour = st.selectbox("시간", hours)
+
+        for m in range(0, 60):
+             mins.append(m)
+        bmin = st.selectbox("분", mins)
 
 
-### 해당 날짜를 타임존에 맞게 변경함. 로컬라이즈
-seoul = pytz.timezone(obj_tzf_result)
-dt = seoul.localize(datetime.datetime(byear, bmonth, bday,bhour,bmin,bsec))
+    # 위치에서 위경도 값을 가져옴
+    location = geolocator.geocode(lad)
 
-### 플랫라이브러(점성술 차트 라이브러리)에 맞는 날짜형식으로 바꿈
-date = Datetime(str(dt.year)+'/'+str(dt.month)+'/'+str(dt.day), str(dt.hour)+':'+str(dt.minute)+':'+str(dt.second),dt.utcoffset().total_seconds()/60/60)     # 플랫 라이브러리 형식의 날짜 입력
+    ### 위치에서 문자열 타임존 가져오기
+    obj_tzf_result = obj_tzf.timezone_at(lng=location.longitude, lat=location.latitude) # 타임존 스트링으로 가져오기
 
-pos = GeoPos(location.latitude, location.longitude)   # 위경도 값 입력
-chart = Chart(date, pos, hsys=const.HOUSES_KOCH,IDs=const.LIST_OBJECTS)
 
-#### 데이타 출력 ##
-with col2:
-    sun = chart.getObject(const.SUN)
-    st.text(sun)
+    ### 해당 날짜를 타임존에 맞게 변경함. 로컬라이즈
+    seoul = pytz.timezone(obj_tzf_result)
+    #dt = seoul.localize(datetime.datetime(bdate.year, bdate.month, bdate.day,btime.hour,btime.minute,btime.second))
+    dt = seoul.localize(datetime.datetime(bdate.year, bdate.month, bdate.day,bhour,bmin,0))
+
+    ### 플랫라이브러(점성술 차트 라이브러리)에 맞는 날짜형식으로 바꿈
+    date = Datetime(str(dt.year)+'/'+str(dt.month)+'/'+str(dt.day), str(dt.hour)+':'+str(dt.minute)+':'+str(dt.second),dt.utcoffset().total_seconds()/60/60)     # 플랫 라이브러리 형식의 날짜 입력
+
+    pos = GeoPos(location.latitude, location.longitude)   # 위경도 값 입력
+    chart = Chart(date, pos, hsys=const.HOUSES_KOCH,IDs=const.LIST_OBJECTS)
+
+    #### 데이타 출력 ##
+    with col3:
+        sun = chart.getObject(const.SUN)
+        st.text(sun)
+        #st.text(name)
+        #st.text(gender)
+        #for obj in chart.objects:
+        #st.text(obj)
+
+        #components.iframe("https://ilyai.github.io/quick-astro-charts/",width=400,height=400)
+        #components.iframe("./astrochart/project/examples/radix/radix.html", width=400, height=400)
+
+        #HtmlFile = open('./astrochart/project/examples/radix/radix.html', 'r')
+        #raw_html = HtmlFile.read().encode("utf-8")
+        #raw_html = base64.b64encode(raw_html).decode()
+        #components.iframe("https://www.google.com/calendar/b/0/embed?showTitle=0&showPrint=0&showTabs=0&showCalendars=0&height=600&wkst=1&bgcolor=%23cccccc&src=xxxxxxxxx.com_613ubxxxxxxxxxxxxxxk%40group.calendar.google.com&color=%2328754E&ctz=Asia%2FSeoul", width=800, height=600)
+
+
