@@ -1,5 +1,9 @@
+from datetime import datetime
+import datetime
 import pandas as pd
-import base64
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
+
 from flatlib.datetime import Datetime               # 날짜 시간
 from flatlib.geopos import GeoPos                   # 위치
 from flatlib import const                           # 차트에서 포인트값
@@ -8,15 +12,19 @@ from flatlib.chart import Chart
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 import pytz
-import datetime
+
 import streamlit as st                              # 스트림릿 임포트
 import streamlit.components.v1 as components        # 스트림릿 컴포넌트
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 import swisseph as swe
+
+now = datetime.datetime.now()
+today = date.today()
+
+
 #swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resources/swefiles')
 # PC에서 라이브러리
 swe.set_ephe_path('c:/venv/helloword/venv/lib/site-packages/flatlib/resources/swefiles')
@@ -47,6 +55,7 @@ with tab1:
 
     with col2:
         bdate = st.date_input("생일", min_value=datetime.date(1900, 1, 1))
+
         #btime = st.time_input("생시")
         hours = []
         mins = []
@@ -79,8 +88,28 @@ with tab1:
 
     #### 데이타 출력 ##
     with col3:
-        sun = chart.getObject(const.SUN)
-        st.text(sun)
+        #sun = chart.getObject(const.SUN)
+        #st.text(sun)
+
+        df = pd.DataFrame()
+        df2 = pd.DataFrame()
+
+        # 해당 달의 첫째날 구하기
+        first_day = bdate.replace(day=1)  # 첫째날
+        last_day = first_day + relativedelta(months=1) - relativedelta(days=1)  # 마지막날
+        
+        # 해당월의 날짜수 구하기
+        j = int(last_day.strftime('%d')) - int(first_day.strftime('%d'))
+
+        # 양력일의 데이타 날짜 구해서 입력
+        df2 = pd.DataFrame([first_day],columns=['양력'])
+        for i in range(1, j + 1):
+            df = pd.DataFrame([first_day + relativedelta(days=i)],columns=['양력'])
+            df2 = pd.concat([df2, df],ignore_index = True)
+
+        st.dataframe(df2['양력'])
+
+        #print(df2)
         #st.text(name)
         #st.text(gender)
         #for obj in chart.objects:
