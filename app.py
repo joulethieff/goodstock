@@ -16,7 +16,7 @@ import pytz
 import streamlit as st                              # 스트림릿 임포트
 import streamlit.components.v1 as components        # 스트림릿 컴포넌트
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 
 import swisseph as swe
