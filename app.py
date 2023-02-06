@@ -26,9 +26,9 @@ today = date.today()
 
 
 #스트림릿 클라우드에서는
-#swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resources/swefiles')
+swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resources/swefiles')
 # PC에서 라이브러리
-swe.set_ephe_path('c:/venv/helloword/venv/lib/site-packages/flatlib/resources/swefiles')
+#swe.set_ephe_path('c:/venv/helloword/venv/lib/site-packages/flatlib/resources/swefiles')
 
 # 웹 화면을 전체적으로 크게 
 st.set_page_config(layout="wide")
