@@ -10,3 +10,6 @@ timezonefinder
 geopy
 swisseph
 python-dateutil
+
+korean_lunar_calendar
+streamlit-aggrid

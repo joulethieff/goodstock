@@ -1,3 +1,5 @@
+from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode, ColumnsAutoSizeMode, AgGridTheme
+from korean_lunar_calendar import KoreanLunarCalendar # 음양력변환 라이브러리
 from datetime import datetime
 import datetime
 import pandas as pd
@@ -36,7 +38,8 @@ st.set_page_config(layout="wide")
 # initialize Nominatim API, 지명과 관련된 api
 geolocator = Nominatim(user_agent="geoapiExercises")
 obj_tzf = TimezoneFinder()
-
+# 음양력 변환객체생성
+calendar_um = KoreanLunarCalendar()
 
 # 화면을 구분
 tab1, tab2, tab3, tab4 = st.tabs(["만세력", "심운", "궁합","타로"])
@@ -45,13 +48,14 @@ tab1, tab2, tab3, tab4 = st.tabs(["만세력", "심운", "궁합","타로"])
 ##### 기본 정보 입력 #######
 ## 탭1 은 만세력정보를 만들어냄
 
+
 with tab1:
 
     ### 스트림릿에서 날짜값들을 입력
     col1, col2 = st.columns([1, 8])  # 년 월 일로 나눔
 
     with col1:
-        bdate = st.date_input("날짜00", min_value=datetime.date(1900, 1, 1))
+        bdate = st.date_input("양력날짜00", min_value=datetime.date(1900, 1, 1))
 
         #btime = st.time_input("생시")
         hours = []
@@ -89,6 +93,8 @@ with tab1:
         #sun = chart.getObject(const.SUN)
         #st.text(sun)
 
+        of = ['월', '화', '수', '목', '금', '토', '일']
+
         df = pd.DataFrame()
         df2 = pd.DataFrame()
 
@@ -100,23 +106,32 @@ with tab1:
         j = int(last_day.strftime('%d')) - int(first_day.strftime('%d'))
 
         # 양력일의 데이타 날짜 구해서 입력
-        #df2 = pd.DataFrame([first_day],["dfd"],columns=['양력','d'])
-        df2 = pd.DataFrame({'양력' : [first_day],
-                            '요일' : [first_day.strftime("%a")]})
-
+        calendar_um.setSolarDate(first_day.year, first_day.month, first_day.day)
+        df2 = pd.DataFrame({'양력' : [first_day.strftime('%Y-%m-%d')],
+                            '요일' : [of[first_day.weekday()]],
+                            '음력' : [calendar_um.LunarIsoFormat()],
+                            '음력간지': [calendar_um.getChineseGapJaString()]
+                            })
 
         for i in range(1, j + 1):
             iday = first_day + relativedelta(days=i)
-            df = pd.DataFrame({'양력' : [iday],
-                               '요일' : [iday.strftime("%a")]})
+            calendar_um.setSolarDate(iday.year,iday.month,iday.day)
+            df = pd.DataFrame({'양력' : [iday.strftime('%Y-%m-%d')],
+                               '요일' : [of[iday.weekday()]],
+                               '음력' : [calendar_um.LunarIsoFormat()],
+                               '음력간지': [calendar_um.getChineseGapJaString()]
+                               })
             df2 = pd.concat([df2, df],ignore_index = True)
 
+        #st.dataframe(df2)
+        #st.table(df2)
+        #AgGrid(df2)
+        #AgGrid(df2, fit_columns_on_grid_load=True)
+        AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS)
 
-        st.dataframe(df2)
 
 
-
-##### 기본 정보 입력 #######
+    ##### 기본 정보 입력 #######
 ## 탭2 은 심운정보를 만들어냄
 
 with tab2:
@@ -152,6 +167,7 @@ with tab2:
     seoul = pytz.timezone(obj_tzf_result)
     # dt = seoul.localize(datetime.datetime(bdate.year, bdate.month, bdate.day,btime.hour,btime.minute,btime.second))
     dt = seoul.localize(datetime.datetime(bdate.year, bdate.month, bdate.day, bhour, bmin, 0))
+
 
     ### 플랫라이브러(점성술 차트 라이브러리)에 맞는 날짜형식으로 바꿈
     date = Datetime(str(dt.year) + '/' + str(dt.month) + '/' + str(dt.day),
