@@ -37,6 +37,7 @@ swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resour
 
 # 웹 화면을 전체적으로 크게 
 st.set_page_config(layout="wide")
+st.title("마음의 점성학 - 남두성 만세력")
 
 # initialize Nominatim API, 지명과 관련된 api
 geolocator = Nominatim(user_agent="geoapiExercises")
@@ -53,6 +54,8 @@ tab1, tab2, tab3, tab4 = st.tabs(["만세력", "심운", "궁합","타로"])
 ######################################################################################################################
 
 with tab1:   # 만세력 탭
+
+    #st.header("만세력")
 
     ### 스트림릿에서 날짜값들을 입력
     col1, col2 = st.columns([1, 8])  # 년 월 일로 나눔
@@ -278,11 +281,11 @@ with tab1:   # 만세력 탭
             ilGangee00 = calendar_um.getChineseGapJaString()[8:11] # 음력갑자에서 일간지만 추출
 
 
-            df = pd.DataFrame({'양력' : [iday.strftime('%Y-%m-%d')],
-                               '요일' : [of[iday.weekday()]],
+            df = pd.DataFrame({'요일' : [of[iday.weekday()]],
+                               '양력' : [iday.strftime('%Y-%m-%d')],
                                '음력' : [calendar_um.LunarIsoFormat()],
-                               '음력간지': [calendar_um.getChineseGapJaString()],
-                               '입춘간지': [YangYearGanGee+' '+YangMonthGangee+' '+ilGangee00]
+                               '입춘간지(명리학)': [YangYearGanGee + ' ' + YangMonthGangee + ' ' + ilGangee00],
+                               '음력간지(천문연구원)': [calendar_um.getChineseGapJaString()]
                                })
             df2 = pd.concat([df2, df],ignore_index = True) #
             iday = first_day + relativedelta(days=i)  #
