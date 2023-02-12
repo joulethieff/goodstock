@@ -37,7 +37,7 @@ swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resour
 
 # 웹 화면을 전체적으로 크게 
 st.set_page_config(layout="wide",page_icon='마음의점성학로고.png')
-st.image('마음의점성학로고.png', width=60)
+#st.image('마음의점성학로고.png', width=60)
 #st.title("마음의 점성학 - 남두성 만세력")
 #st.header("마음의 점성학 - 남두성 만세력")
 #st.subheader("마음의 점성학 - 남두성 만세력")
