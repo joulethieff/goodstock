@@ -289,7 +289,7 @@ with tab1:   # 만세력 탭
 
         #st.text(YangYearGanGee[0])
         #AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
-        AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS)
+        AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
 
 
 
