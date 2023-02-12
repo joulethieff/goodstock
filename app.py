@@ -60,15 +60,15 @@ with tab1:   # 만세력 탭
     ### tab1 ###
     with col1:
 
-        byear = st.text_input("년",2023)
-        bmonth = st.text_input("월",1)
+        byear = st.number_input("년",value=2023,min_value=1896,max_value=2050)
+        bmonth = st.number_input("월",value=1,min_value=1,max_value=12)
         bday = '1'
 
         #bdate = st.date_input("양력날짜00", min_value=datetime.date(1900, 1, 1))
         #bdate = datetime.strptime(date_str, '%m-%d-%Y')
 
         #bdate = datetime(byear+'/'+bmonth+'/'+bday,'%Y/%m/%d')
-        bdate = datetime.datetime.strptime(byear+'/'+bmonth+'/'+bday, '%Y/%m/%d')
+        bdate = datetime.datetime.strptime(str(byear)+'/'+str(bmonth)+'/'+bday, '%Y/%m/%d')
 
         bhour = 0 # 초기 시간은 0
         bmin = 0 # 초기 분도 0
