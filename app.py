@@ -36,8 +36,11 @@ swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resour
 #swe.set_ephe_path('c:/venv/helloword/venv/lib/site-packages/flatlib/resources/swefiles')
 
 # 웹 화면을 전체적으로 크게 
-st.set_page_config(layout="wide")
-st.title("마음의 점성학 - 남두성 만세력")
+st.set_page_config(layout="wide",page_icon='마음의점성학로고.png')
+st.image('마음의점성학로고.png', width=60)
+#st.title("마음의 점성학 - 남두성 만세력")
+#st.header("마음의 점성학 - 남두성 만세력")
+#st.subheader("마음의 점성학 - 남두성 만세력")
 
 # initialize Nominatim API, 지명과 관련된 api
 geolocator = Nominatim(user_agent="geoapiExercises")
@@ -283,8 +286,8 @@ with tab1:   # 만세력 탭
 
             df = pd.DataFrame({'요일' : [of[iday.weekday()]],
                                '양력' : [iday.strftime('%Y-%m-%d')],
-                               '음력' : [calendar_um.LunarIsoFormat()],
                                '입춘간지(명리학)': [YangYearGanGee + ' ' + YangMonthGangee + ' ' + ilGangee00],
+                               '음력' : [calendar_um.LunarIsoFormat()],
                                '음력간지(천문연구원)': [calendar_um.getChineseGapJaString()]
                                })
             df2 = pd.concat([df2, df],ignore_index = True) #
