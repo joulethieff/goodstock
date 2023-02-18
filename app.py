@@ -79,6 +79,7 @@ with tab1:   # 만세력 탭
         bhour = 0 # 초기 시간은 0
         bmin = 0 # 초기 분도 0
 
+        K_tzoffset_day = 0.0
         #lad = st.text_input('장소00', '서울시',disabled=1)  # 위치명 입력
 
 
@@ -97,7 +98,7 @@ with tab1:   # 만세력 탭
         dt = seoul.localize(datetime.datetime(bdate.year, bdate.month, bdate.day,bhour,bmin,0))
         #st.text_input('오프셋',dt.utcoffset().total_seconds() / 60 / 60,disabled=1)
         #st.text(dt)
-
+        K_tzoffset_day = dt.utcoffset().total_seconds() / 60 / 60 / 24 # 타임존 offset값 줄리안데이로 계산
 
     ### tab1
     #### 데이타 출력  ##
@@ -301,12 +302,12 @@ with tab1:   # 만세력 탭
             JD_return = ['']
 
             for k in HwangGyung:
-                JD_return = swe._next_aspect(swe.SUN,0,k,JD_today-0.375,dayspan=1) # 태양이 절기의 황경의 값에 있을때 줄리안 데이트를 리턴
+                JD_return = swe._next_aspect(swe.SUN,0,k,JD_today-K_tzoffset_day,dayspan=1) # 태양이 절기의 황경의 값에 있을때 줄리안 데이트를 리턴
                 if bool(JD_return[0][0]) != bool(''):
-                    JeulGiIl = swe._revjul(JD_return[0][0]+0.375)[2]
-                    JeulGiSi = swe._revjul(JD_return[0][0]+0.375)[3]
-                    JeulGiBun = swe._revjul(JD_return[0][0]+0.375)[4]
-                    JeulGiCho = swe._revjul(JD_return[0][0]+0.375)[5]
+                    JeulGiIl = swe._revjul(JD_return[0][0]+K_tzoffset_day)[2]
+                    JeulGiSi = swe._revjul(JD_return[0][0]+K_tzoffset_day)[3]
+                    JeulGiBun = swe._revjul(JD_return[0][0]+K_tzoffset_day)[4]
+                    JeulGiCho = swe._revjul(JD_return[0][0]+K_tzoffset_day)[5]
                     JeulGi = str(HwangGyung[k]) + ' ' + str(JeulGiIl) + '일' +str(JeulGiSi) + '시' + str(JeulGiBun) + '분' + str(JeulGiCho) + '초'
                     break
                 JeulGi='-' # 절기값이 해당되지 않으면 - 을 입력
