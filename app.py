@@ -39,7 +39,7 @@ swe.set_ephe_path('/home/appuser/venv/lib/python3.9/site-packages/flatlib/resour
 st.set_page_config(layout="wide",page_icon='마음의점성학로고.png')
 #st.image('마음의점성학로고.png', width=60)
 #st.title("마음의 점성학 - 남두성 만세력")
-#st.header("마음의 점성학 - 남두성 만세력")
+st.header("마음의 점성학 - 남두성 만세력")
 #st.subheader("마음의 점성학 - 남두성 만세력")
 
 # initialize Nominatim API, 지명과 관련된 api
@@ -49,7 +49,7 @@ obj_tzf = TimezoneFinder()
 calendar_um = KoreanLunarCalendar()
 
 # 화면을 구분
-tab1, tab2, tab3, tab4 = st.tabs(["만세력", "심운", "궁합","타로"])
+tab1, tab2, = st.tabs(["만세력", "타임존"])
 
 
 
@@ -66,15 +66,15 @@ with tab1:   # 만세력 탭
     ### tab1 ###
     with col1:
 
-        byear = st.number_input("년",value=2023,min_value=1896,max_value=2050)
-        bmonth = st.number_input("월",value=1,min_value=1,max_value=12)
-        bday = '1'
+        byear = st.number_input("년",value=today.year,min_value=1896,max_value=2050)
+        bmonth = st.number_input("월",value=today.month,min_value=1,max_value=12)
+        bday = today.day
 
         #bdate = st.date_input("양력날짜00", min_value=datetime.date(1900, 1, 1))
         #bdate = datetime.strptime(date_str, '%m-%d-%Y')
 
         #bdate = datetime(byear+'/'+bmonth+'/'+bday,'%Y/%m/%d')
-        bdate = datetime.datetime.strptime(str(byear)+'/'+str(bmonth)+'/'+bday, '%Y/%m/%d')
+        bdate = datetime.datetime.strptime(str(byear)+'/'+str(bmonth)+'/'+str(bday), '%Y/%m/%d')
 
         bhour = 0 # 초기 시간은 0
         bmin = 0 # 초기 분도 0
@@ -284,7 +284,36 @@ with tab1:   # 만세력 탭
             ilGangee00 = calendar_um.getChineseGapJaString()[8:11] # 음력갑자에서 일간지만 추출
 
 
+            #절기를 계산한다.
+            JD_today = swe._julday(iday.year, iday.month, iday.day,0,0)  # 오늘의 줄리안 데이트를 구한다.
+
+            #황경값에 대한 딕셔너리
+            HwangGyung = {0:'춘분',15:'청명',30:'곡우',45:'입하',60:'소만',75:'망종',90:'하지',105:'소서',120:'대서',135:'입추',
+                          150:'처서',165:'백로',180:'추분',195:'한로',210:'상강',225:'입동',240:'소설',255:'대설',270:'동지',
+                          285:'소한',300:'대한',315:'입춘',330:'우수',345:'경칩'}
+            
+            #해당일의 절기와 절기가 들어오는 시간을 구함
+            JeulGi='' # 구해진 절기값을 입력함
+            JeulGiIl = 0
+            JeulGiSi = 0
+            JeulGiBun = 0
+            JeulGiCho = 0
+            JD_return = ['']
+
+            for k in HwangGyung:
+                JD_return = swe._next_aspect(swe.SUN,0,k,JD_today-0.375,dayspan=1) # 태양이 절기의 황경의 값에 있을때 줄리안 데이트를 리턴
+                if bool(JD_return[0][0]) != bool(''):
+                    JeulGiIl = swe._revjul(JD_return[0][0]+0.375)[2]
+                    JeulGiSi = swe._revjul(JD_return[0][0]+0.375)[3]
+                    JeulGiBun = swe._revjul(JD_return[0][0]+0.375)[4]
+                    JeulGiCho = swe._revjul(JD_return[0][0]+0.375)[5]
+                    JeulGi = str(HwangGyung[k]) + ' ' + str(JeulGiIl) + '일' +str(JeulGiSi) + '시' + str(JeulGiBun) + '분' + str(JeulGiCho) + '초'
+                    break
+                JeulGi='-' # 절기값이 해당되지 않으면 - 을 입력
+
+
             df = pd.DataFrame({'요일' : [of[iday.weekday()]],
+                               '절기' : [JeulGi],
                                '양력' : [iday.strftime('%Y-%m-%d')],
                                '입춘간지(명리학)': [YangYearGanGee + ' ' + YangMonthGangee + ' ' + ilGangee00],
                                '음력' : [calendar_um.LunarIsoFormat()],
@@ -292,6 +321,9 @@ with tab1:   # 만세력 탭
                                })
             df2 = pd.concat([df2, df],ignore_index = True) #
             iday = first_day + relativedelta(days=i)  #
+
+
+
 
         #st.text(YangYearGanGee[0])
         #AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
