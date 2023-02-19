@@ -328,7 +328,18 @@ with tab1:   # 만세력 탭
 
         #st.text(YangYearGanGee[0])
         #AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
-        AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
+
+        builder = GridOptionsBuilder.from_dataframe(df2)
+        builder.configure_column("요일", suppressMovable=True, filter=False,sortable = False, width=70)
+        builder.configure_column("절기", suppressMovable=True, filter=False,sortable=False, width=160)
+        builder.configure_column("양력", suppressMovable=True, filter=False,sortable=False)
+        builder.configure_column("입춘간지(명리학)", suppressMovable=True, filter=False,sortable=False)
+        builder.configure_column("음력", suppressMovable=True, filter=False,sortable=False)
+        builder.configure_column("음력간지(천문연구원)", suppressMovable=True, filter=False,sortable=False)
+        go = builder.build()
+
+        #AgGrid(data=df2, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
+        AgGrid(df2, gridOptions=go,columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,enable_enterprise_modules=False)
 
 
 
